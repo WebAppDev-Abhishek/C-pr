@@ -8,8 +8,9 @@ struct Node {
 };
 
 class stack {
+    private:
     Node* topNode;
-
+public:
     stack(): topNode(nullptr){}
 
     void createNode(int value){
@@ -21,7 +22,6 @@ class stack {
     }
 
     void display(){
-        cout<<"This is a stack:";
         Node* temp = topNode;
         while(temp!=nullptr){
             cout<<temp->data<<"--";
@@ -30,3 +30,21 @@ class stack {
     }
 };
 
+int main(){
+    stack st;
+    int count, val;
+
+    cout<<"Enter the number of nodes:"<<endl;
+    cin>>count;
+
+    for(int i = 0; i<count; i++){
+        cout<<"Enter the node data"<<(i+1)<<" ";
+        cin>>val;
+        st.createNode(val);
+    }
+
+    cout<<"This is a stack:"<<endl;
+    st.display();
+
+    return 0;
+}
