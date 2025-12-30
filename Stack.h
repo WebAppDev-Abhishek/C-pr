@@ -16,6 +16,15 @@ class stack {
 public:
     stack(): topNode(nullptr){}
 
+    //Destructor to prevent memory leaks during load tests
+    ~stack(){
+        while(topNode!=nullptr){
+            Node* temp = topNode;
+            topNode = topNode->next;
+            delete temp;
+        }
+    }
+
     //Push oparation
     void push(int value){
         Node* newNode = new Node();
@@ -37,15 +46,6 @@ public:
         topNode=topNode->next;
         delete temp;
         cout<<"Element "<<poppedVal<<"popped from stack."<<endl;
-    }
-
-    //Peek/Top operation
-    void peek(){
-        if(isEmpty()){
-            cout<<"Stack is empty."<<endl;
-        }else{
-            cout<<"Top element is: "<<topNode->data<<endl;
-        }
     }
 
     bool isEmpty(){
