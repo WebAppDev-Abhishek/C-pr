@@ -19,5 +19,14 @@ class stack {
         topNode = newNode;
         cout<<"New node are"<<value<<"push as top node";
     }
+
+    void display(){
+        cout<<"This is a stack:";
+        Node* temp = topNode;
+        while(temp!=nullptr){
+            cout<<temp->data<<"--";
+            temp=temp->next;
+        }
+    }
 };
 
