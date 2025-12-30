@@ -18,7 +18,7 @@ public:
         newNode->data = value;
         newNode->next = topNode;
         topNode = newNode;
-        cout<<"New node are"<<value<<"push as top node";
+        cout<<"New node are: "<<value<<"\npush as top node"<<endl;
     }
 
     void display(){
