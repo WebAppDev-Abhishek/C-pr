@@ -25,5 +25,14 @@ class Queue {
         arr[rear] = value;
     }
 
-    
-}
+    int dequeue(){
+        if(isEmpty()){
+            std::cout<<"Queue Underflow\n";
+            return -1;
+        }
+        int data = arr[front];
+        if(front == rear){ front = rear = -1; }// Queue becomes empty
+        else {front = (front + 1)%MAX;}
+        return data;
+    }
+};
