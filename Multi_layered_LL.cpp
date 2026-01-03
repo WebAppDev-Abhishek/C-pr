@@ -11,7 +11,6 @@
     #include <termios.h>
     #include <unistd.h>
     #define CLEAR "clear"
-    // Custom getch for Linux/macOS
     int GETCH() {
         struct termios oldt, newt;
         int ch;
@@ -33,13 +32,31 @@ struct Node {
 
     Node(int _x, int _y, int _z, int _id) 
         : x(_x), y(_y), z(_z), id(_id) {
-        data = _id * 5; // Example data
+        data = _id * 5;
         next = prev = up = down = front = back = nullptr;
     }
 };
 
+// --- NEW SEARCH FUNCTION ---
+// Traverses the 3D structure using pointers to find a specific ID
+Node* findNode(Node* head, int targetId) {
+    Node* layer = head;
+    while (layer) {
+        Node* row = layer;
+        while (row) {
+            Node* col = row;
+            while (col) {
+                if (col->id == targetId) return col;
+                col = col->next; // Search X
+            }
+            row = row->front; // Search Y
+        }
+        layer = layer->up; // Search Z
+    }
+    return nullptr; // Not found
+}
+
 Node* build3DGrid(int size) {
-    // 3D vector to store pointers for easy linking
     std::vector<std::vector<std::vector<Node*>>> cube(size, 
         std::vector<std::vector<Node*>>(size, std::vector<Node*>(size)));
     
@@ -49,7 +66,6 @@ Node* build3DGrid(int size) {
             for (int x = 0; x < size; x++)
                 cube[z][y][x] = new Node(x, y, z, idCounter++);
 
-    // Link the nodes
     for (int z = 0; z < size; z++) {
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
@@ -66,13 +82,14 @@ Node* build3DGrid(int size) {
     return cube[0][0][0];
 }
 
-void draw(Node* head, Node* current) {
+void draw(Node* head, Node* current, std::string msg = "") {
     system(CLEAR);
     int cz = current->z;
-    std::cout << "--- 3D NAVIGATOR (Z-Layer: " << cz << ") ---\n";
-    std::cout << "WASD: Move | R: Up Level | F: Down Level | Q: Quit\n\n";
+    std::cout << "--- 3D NAVIGATOR ---\n";
+    std::cout << "WASD: Move | R/F: Z-Layer | T: Teleport | Q: Quit\n";
+    if (!msg.empty()) std::cout << "MESSAGE: " << msg << "\n";
+    std::cout << "\nShowing Z-Layer: " << cz << "\n";
 
-    // Find the start of the current Z-layer
     Node* layer = head;
     while(layer && layer->z != cz) layer = layer->up;
 
@@ -92,11 +109,27 @@ void draw(Node* head, Node* current) {
 int main() {
     Node* head = build3DGrid(10);
     Node* current = head;
-    bool running = true;
+    std::string message = "";
 
-    while (running) {
-        draw(head, current);
+    while (true) {
+        draw(head, current, message);
+        message = ""; 
         char key = GETCH();
+
+        if (key == 'q') break;
+        if (key == 't') {
+            int target;
+            std::cout << "Enter Node ID to teleport to (1-1000): ";
+            std::cin >> target;
+            Node* found = findNode(head, target);
+            if (found) {
+                current = found;
+                message = "Teleported to " + std::to_string(target);
+            } else {
+                message = "ID not found!";
+            }
+            continue;
+        }
 
         switch (key) {
             case 'w': if (current->back)  current = current->back;  break;
@@ -105,7 +138,6 @@ int main() {
             case 'd': if (current->next)  current = current->next;  break;
             case 'r': if (current->up)    current = current->up;    break;
             case 'f': if (current->down)  current = current->down;  break;
-            case 'q': running = false; break;
         }
     }
     return 0;

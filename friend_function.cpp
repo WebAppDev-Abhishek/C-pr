@@ -6,7 +6,9 @@ class Box {
     private:
     int width;
     public:
-    Box(int w):width(w){}
+    Box(int w){
+        width = w;
+    }
     // friend declaration
     friend int getWidth(Box b);
 };

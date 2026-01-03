@@ -34,7 +34,24 @@ bool insertElement(int arr[], int &size, int capacity, int element, int index){
     return true;
 }
 
-int main(){
-    int capacity = 100;
-    int 
+int main() {
+    int capacity = 100; // Maximum size of the array
+    int arr[100] = {10, 20, 30, 40, 50}; // Initial elements
+    int size = 5; // Current number of elements
+
+    cout << "--- Initial Array ---" << endl;
+    display(arr, size);
+
+    int element, index;
+    cout << "\nEnter element to insert: ";
+    cin >> element;
+    cout << "Enter index (0 to " << size << "): ";
+    cin >> index;
+
+    if (insertElement(arr, size, capacity, element, index)) {
+        cout << "\nInsertion Successful!" << endl;
+        display(arr, size);
+    }
+
+    return 0;
 }
